@@ -10,7 +10,7 @@ export const useHeartbeat = () => {
     const nextNoteTimeRef = useRef<number>(0);
     const currentBpmRef = useRef<number>(60);
     const targetBpmRef = useRef<number>(60);
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number | null>(null);
 
     const isFlatliningRef = useRef(false);
     const flatlineTimeoutRef = useRef<number | null>(null);

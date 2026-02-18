@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useVelocity, useAnimationFrame } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useHeartbeat } from '../../hooks/useHeartbeat';
