@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import MedTechScene from './components/3d/MedTechScene.tsx';
 import Navbar from './components/ui/Navbar.tsx';
 import Hero from './components/ui/Hero.tsx';
