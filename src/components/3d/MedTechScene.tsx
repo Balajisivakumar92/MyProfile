@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Float, PresentationControls, ContactShadows } from '@react-three/drei';
 import DicomSliceStack from './DicomSliceStack';
 
-const MedTechScene = () => {
+const MedTechScene = ({ onLoad }: { onLoad?: () => void }) => {
     const [scale, setScale] = useState(1);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const MedTechScene = () => {
                     >
                         <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
                             <group scale={scale}>
-                                <DicomSliceStack />
+                                <DicomSliceStack onLoad={onLoad} />
                             </group>
                         </Float>
                     </PresentationControls>

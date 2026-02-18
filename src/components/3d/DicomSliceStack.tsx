@@ -7,7 +7,7 @@ import type { LoadedDicom } from '../../utils/dicomLoader';
 // Get all files from the dicom folder
 const dicomFiles = import.meta.glob('../../assets/dicom/*.dcm', { eager: true, as: 'url' });
 
-const DicomSliceStack = () => {
+const DicomSliceStack = ({ onLoad }: { onLoad?: () => void }) => {
     const groupRef = useRef<THREE.Group>(null);
     const [loadedSlices, setLoadedSlices] = useState<LoadedDicom[]>([]);
 
@@ -39,12 +39,13 @@ const DicomSliceStack = () => {
             }
             if (isMounted) {
                 setLoadedSlices(results);
+                if (onLoad) onLoad();
             }
         }
 
         loadAll();
         return () => { isMounted = false; };
-    }, [sliceUrls]);
+    }, [sliceUrls, onLoad]);
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
