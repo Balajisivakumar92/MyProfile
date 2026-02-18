@@ -47,7 +47,7 @@ const DicomSliceStack = ({ onLoad }: { onLoad?: () => void }) => {
         return () => { isMounted = false; };
     }, [sliceUrls, onLoad]);
 
-    useFrame((state) => {
+    useFrame(() => {
         const time = performance.now() / 1000;
         if (groupRef.current) {
             groupRef.current.rotation.y = time * 0.1;
@@ -105,7 +105,7 @@ const DicomSliceStack = ({ onLoad }: { onLoad?: () => void }) => {
 const ScanEffect = ({ sliceCount, sliceSpacing, sliceSize }: { sliceCount: number, sliceSpacing: number, sliceSize: number }) => {
     const scanRef = useRef<THREE.Mesh>(null!);
 
-    useFrame((state) => {
+    useFrame(() => {
         const time = performance.now() / 1000;
         const range = sliceCount * sliceSpacing;
         const y = ((time % 4) / 4) * range - range / 2;
