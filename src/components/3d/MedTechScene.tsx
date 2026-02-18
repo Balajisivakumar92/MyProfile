@@ -19,7 +19,7 @@ const MedTechScene = ({ onLoad }: { onLoad?: () => void }) => {
     }, []);
 
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, touchAction: 'none' }}>
             <Canvas
                 camera={{ position: [0, 0, 5], fov: 75 }}
                 eventSource={document.getElementById('root') || undefined}

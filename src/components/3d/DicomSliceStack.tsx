@@ -5,7 +5,7 @@ import { loadDicom } from '../../utils/dicomLoader';
 import type { LoadedDicom } from '../../utils/dicomLoader';
 
 // Get all files from the dicom folder
-const dicomFiles = import.meta.glob('../../assets/dicom/*.dcm', { eager: true, as: 'url' });
+const dicomFiles = import.meta.glob('../../assets/dicom/*.dcm', { eager: true, query: '?url', import: 'default' });
 
 const DicomSliceStack = ({ onLoad }: { onLoad?: () => void }) => {
     const groupRef = useRef<THREE.Group>(null);
@@ -48,7 +48,7 @@ const DicomSliceStack = ({ onLoad }: { onLoad?: () => void }) => {
     }, [sliceUrls, onLoad]);
 
     useFrame((state) => {
-        const time = state.clock.getElapsedTime();
+        const time = performance.now() / 1000;
         if (groupRef.current) {
             groupRef.current.rotation.y = time * 0.1;
             groupRef.current.rotation.x = -Math.PI / 6; // Slight tilt towards the camera
@@ -106,7 +106,7 @@ const ScanEffect = ({ sliceCount, sliceSpacing, sliceSize }: { sliceCount: numbe
     const scanRef = useRef<THREE.Mesh>(null!);
 
     useFrame((state) => {
-        const time = state.clock.getElapsedTime();
+        const time = performance.now() / 1000;
         const range = sliceCount * sliceSpacing;
         const y = ((time % 4) / 4) * range - range / 2;
         scanRef.current.position.y = y;

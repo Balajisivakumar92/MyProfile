@@ -1,23 +1,37 @@
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useMemo, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useVelocity, useAnimationFrame } from 'framer-motion';
+import { Volume2, VolumeX } from 'lucide-react';
+import { useHeartbeat } from '../../hooks/useHeartbeat';
+import { useMemo } from 'react';
 
 const EcgScrollProgress = () => {
-    const { scrollYProgress } = useScroll();
-    const [isMobile, setIsMobile] = useState(false);
+    const { scrollY } = useScroll();
+    const scrollVelocity = useVelocity(scrollY);
+    const { isMuted, toggleMute, processHeartbeat } = useHeartbeat();
+
+    const [viewType, setViewType] = useState<'desktop' | 'mobile'>('desktop');
 
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        const checkView = () => {
+            const width = window.innerWidth;
+            if (width < 768) setViewType('mobile');
+            else setViewType('desktop');
+        };
+        checkView();
+        window.addEventListener('resize', checkView);
+        return () => window.removeEventListener('resize', checkView);
     }, []);
 
-    // Smooth the progress for a more organic medical feel
-    const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
+    // Drive audio with animation frame for smooth velocity updates
+    useAnimationFrame(() => {
+        const velocity = scrollVelocity.get();
+        processHeartbeat(velocity);
     });
+
+    const isMobile = viewType === 'mobile';
+
+    // Smooth the progress for a more organic medical feel
+    const smoothProgress = useTransform(scrollY, [0, document.body.scrollHeight - window.innerHeight], [0, 1]);
 
     // Generate a repeating ECG path
     // A standard ECG complex (P-QRS-T)
@@ -55,6 +69,7 @@ const EcgScrollProgress = () => {
     }, []);
 
     const opacity = useTransform(smoothProgress, [0, 0.05], [0, 1]);
+    const ballY = useTransform(smoothProgress, [0, 1], ['0vh', '100vh']);
 
     return (
         <div style={{
@@ -111,20 +126,20 @@ const EcgScrollProgress = () => {
                 </defs>
             </svg>
 
-            {/* Glowing heartbeat bead at the current scroll position */}
+            {/* Glowing Bead */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    top: useTransform(smoothProgress, [0, 1], ['0%', '100%']),
+                    top: -5,
                     left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: isMobile ? '5px' : '7px',
-                    height: isMobile ? '5px' : '7px',
+                    x: '-50%',
+                    y: ballY,
+                    width: isMobile ? '8px' : '12px',
+                    height: isMobile ? '8px' : '12px',
                     borderRadius: '50%',
-                    backgroundColor: '#00f2ff',
-                    boxShadow: '0 0 15px #00f2ff, 0 0 30px #00f2ff',
-                    opacity,
-                    zIndex: 1
+                    background: '#00f2ff',
+                    boxShadow: '0 0 10px #00f2ff, 0 0 20px #00f2ff',
+                    zIndex: 10,
                 }}
                 animate={{
                     scale: [1, 1.4, 1.2, 1.8, 1],
@@ -138,6 +153,31 @@ const EcgScrollProgress = () => {
                     ease: "easeInOut"
                 }}
             />
+
+            {/* Audio Toggle */}
+            <button
+                onClick={toggleMute}
+                style={{
+                    position: 'fixed', // Fixed to screen
+                    top: '20px',
+                    right: '20px',    // Top Right
+                    background: 'rgba(0,0,0,0.5)', // Slight background for visibility
+                    borderRadius: '50%',
+                    border: '1px solid #00f2ff',
+                    cursor: 'pointer',
+                    color: isMuted ? 'rgba(255, 255, 255, 0.5)' : '#00f2ff',
+                    transition: 'all 0.3s',
+                    zIndex: 9999, // High z-index to be above everything
+                    padding: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    pointerEvents: 'auto',
+                }}
+                title={isMuted ? "Unmute Heartbeat" : "Mute Heartbeat"}
+            >
+                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+            </button>
         </div>
     );
 };
