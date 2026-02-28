@@ -50,7 +50,9 @@ function App() {
             <Contact />
 
             <footer className="text-secondary" style={{ marginTop: '4rem', opacity: 0.6, fontSize: '0.8rem' }}>
-              © {new Date().getFullYear()} Balaji Sivakumar. All Rights Reserved. Built with React, Three.js & Framer Motion.
+              © {new Date().getFullYear()} Balaji Sivakumar. All Rights Reserved.
+              <br />
+              Built with ❤️ React, Three.js & Framer Motion.
             </footer>
           </section>
         </div>

@@ -69,12 +69,12 @@ const Resume = () => {
         {
             school: "Saveetha School of Engineering",
             degree: "Bachelor of Engineering - BE, Electronic and Communications Engineering",
-            period: "2013 - 2017" // Fixed year based on 8.5+ years exp logic
+            period: "2016 - 2019" // Fixed year based on 8.5+ years exp logic
         },
         {
             school: "NTTF (Nettur Technical Training Foundation)",
             degree: "Diploma, Electrical, Electronic and Communications Engineering Technology",
-            period: "2010 - 2013"
+            period: "2011 - 2013"
         }
     ];
 
